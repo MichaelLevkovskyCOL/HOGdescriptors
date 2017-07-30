@@ -56,23 +56,24 @@ cvSetData(maskH,mask,maskH->step);
 cvFilter2D(img_gray,xedge,maskH);
 cvFilter2D(img_gray,yedge,maskV); 
 
+
 cvReleaseImage(&img_gray); IplImage** bins = (IplImage**) malloc(9 * sizeof(IplImage*));
-for (int i = 0; i < 9 ; i++) {bins[i] = cvCreateImage(cvGetSize(in), IPL_DEPTH_32F,1); cvSetZero(bins[i]);} 
-int x, y; 
-float temp_gradient, temp_magnitude; 
+for (int i = 0; i < 9 ; i++) {bins[i] = cvCreateImage(cvGetSize(in), IPL_DEPTH_32F,1); cvSetZero(bins[i]);}
+int x, y;
+float Gradiente_Temporal, Magnitud_Temporal;
 for (y = 0; y height; y++) { float* ptr1 = (float*) (xedge->imageData + y * (xedge->widthStep)); float* ptr2 = (float*) (yedge->imageData + y * (yedge->widthStep)); float** ptrs = (float**) malloc(9 * sizeof(float*));
-for (int i = 0; i < 9 ;i++){ptrs[i] = (float*) (bins[i]->imageData + y * (bins[i]->widthStep));} 
-for (x = 0; x width; x++) { if (ptr1[x] == 0){temp_gradient = ((atan(ptr2[x] / (ptr1[x] + 0.00001))) * (180/ CV_PI)) + 90;} 
-else{temp_gradient = ((atan(ptr2[x] / ptr1[x])) * (180 / CV_PI)) + 90;} temp_magnitude = sqrt((ptr1[x] * ptr1[x]) + (ptr2[x] * ptr2[x]));
-if (temp_gradient <= 20) {ptrs[0][x] = temp_magnitude;} 
-else if (temp_gradient <= 40) {ptrs[1][x] = temp_magnitude;} 
-else if (temp_gradient <= 60) {ptrs[2][x] = temp_magnitude;} 
-else if (temp_gradient <= 80) {ptrs[3][x] = temp_magnitude;} 
-else if (temp_gradient <= 100) {ptrs[4][x] = temp_magnitude;} 
-else if (temp_gradient <= 120) {ptrs[5][x] = temp_magnitude;} 
-else if (temp_gradient <= 140) {ptrs[6][x] = temp_magnitude;} 
-else if (temp_gradient <= 160) {ptrs[7][x] = temp_magnitude;} else {ptrs[8][x] = temp_magnitude;} } } for (int i = 0; i <9 ; i++){cvIntegral(bins[i], integrals[i]);} 
-for (int i = 0; i <9 ; i++){cvReleaseImage(&bins[i]);} 
+for (int i = 0; i < 9 ;i++){ptrs[i] = (float*) (bins[i]->imageData + y * (bins[i]->widthStep));}
+for (x = 0; x width; x++) { if (ptr1[x] == 0){Gradiente_Temporal = ((atan(ptr2[x] / (ptr1[x] + 0.00001))) * (180/ CV_PI)) + 90;}
+else{Gradiente_Temporal = ((atan(ptr2[x] / ptr1[x])) * (180 / CV_PI)) + 90;} Magnitud_Temporal = sqrt((ptr1[x] * ptr1[x]) + (ptr2[x] * ptr2[x]));
+if (Gradiente_Temporal <= 20) {ptrs[0][x] = Magnitud_Temporal;}
+else if (Gradiente_Temporal <= 40) {ptrs[1][x] = Magnitud_Temporal;}
+else if (Gradiente_Temporal <= 60) {ptrs[2][x] = Magnitud_Temporal;}
+else if (Gradiente_Temporal <= 80) {ptrs[3][x] = Magnitud_Temporal;}
+else if (Gradiente_Temporal <= 100) {ptrs[4][x] = Magnitud_Temporal;}
+else if (Gradiente_Temporal <= 120) {ptrs[5][x] = Magnitud_Temporal;}
+else if (Gradiente_Temporal <= 140) {ptrs[6][x] = Magnitud_Temporal;}
+else if (Gradiente_Temporal <= 160) {ptrs[7][x] = Magnitud_Temporal;} else {ptrs[8][x] = Magnitud_Temporal;} } } for (int i = 0; i <9 ; i++){cvIntegral(bins[i], integrals[i]);}
+for (int i = 0; i <9 ; i++){cvReleaseImage(&bins[i]);}
 cvReleaseImage(&xedge); 
 cvReleaseImage(&yedge); 
 cvReleaseMat(&maskV); 
