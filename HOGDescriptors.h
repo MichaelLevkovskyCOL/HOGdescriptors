@@ -4,7 +4,7 @@
 //2012
 // 
 //After previously load the video, segment the video, using BoundingBox to enclose the person, loaded person characteristics, calculate error, and determine distance. The
-//Follow
+//The main functions to calculate the HOG descriptors are shown below
  
 //Libraries used// 
 #include "cv.h" 
@@ -49,11 +49,11 @@ IplImage** calculateIntegralHOG(IplImage* in){ // Function that calculates HOG I
 
 /*Creation of Border Masks*/ 
 CvMat* maskV = cvCreateMat(3,1,CV_32FC1); 
- CvMat* maskH = cvCreateMat(1,3,CV_32FC1); 
-  cvSetData(maskV,mask,maskV->step); 
-   cvSetData(maskH,mask,maskH->step);
-    cvFilter2D(img_gray,xedge,maskH);
-     cvFilter2D(img_gray,yedge,maskV); 
+CvMat* maskH = cvCreateMat(1,3,CV_32FC1); 
+cvSetData(maskV,mask,maskV->step); 
+cvSetData(maskH,mask,maskH->step);
+cvFilter2D(img_gray,xedge,maskH);
+cvFilter2D(img_gray,yedge,maskV); 
 
 cvReleaseImage(&img_gray); IplImage** bins = (IplImage**) malloc(9 * sizeof(IplImage*));
 for (int i = 0; i < 9 ; i++) {bins[i] = cvCreateImage(cvGetSize(in), IPL_DEPTH_32F,1); cvSetZero(bins[i]);} 
@@ -96,12 +96,12 @@ int num_blq=0;
 
 //____________________________________________________________________
 void calculateHOG_block(CvRect block, int num_bloque,CvMat* hog_block,IplImage** integrals, int normalization){// HOG descriptors calculation
-CvMat* aux = cvCreateMat(1,9,CV_32FC1);// 1 x 9 Mtraix  32 bits float 1CH
-for (int i=0; i < 9; i++){ 
-double a = cvGetReal2D(integrals[i],block.y,block.x); 
-double b = cvGetReal2D(integrals[i],block.y + block.height, block.x + block.width); 
-double c = cvGetReal2D(integrals[i],block.y + block.height, block.x); 
-double d = cvGetReal2D(integrals[i],block.y, block.x + block.width); 
+ CvMat* aux = cvCreateMat(1,9,CV_32FC1);// 1 x 9 Mtraix  32 bits float 1CH
+  for (int i=0; i < 9; i++){ 
+   double a = cvGetReal2D(integrals[i],block.y,block.x); 
+   double b = cvGetReal2D(integrals[i],block.y + block.height, block.x + block.width); 
+   double c = cvGetReal2D(integrals[i],block.y + block.height, block.x); 
+   double d = cvGetReal2D(integrals[i],block.y, block.x + block.width); 
 cvSetReal2D(aux,0,i,((a + b)-(c + d)));} 
 if (normalization != -1){cvNormalize(aux, aux, 1, 0, normalization);} 
 for (int j=0; j < 9; j++) {cvSetReal2D(hog_block,0,num_bloque*9+j,cvGetReal2D(aux,0,j));}}
