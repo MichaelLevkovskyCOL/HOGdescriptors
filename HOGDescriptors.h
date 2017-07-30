@@ -2,6 +2,21 @@
 #include "cv.h" 
 #include "highgui.h" 
 #include "math.h" 
+CvMat* caracHOG(IplImage* img, int ca, int cb);
+IplImage** calculateIntegralHOG(IplImage* in);
+CvMat* calculateHOG_window(IplImage** integrals,CvSize bloque, float
+overlap,int normalization);
+void calculateHOG_block(CvRect block, int num_bloque,CvMat*
+hog_block,IplImage** integrals, int normalization);
+IplImage** integrals;
+float mask[3]={1.0,0.0,-1.0};
+int total_caracteristicas, lx, ly, width, height, M, C, ca, cb, Nframe, aux;
+float b=0, distanciatotal=0, minaux=0;
+double *min_val, *max_val;
+CvPoint pt1, pt2, vt1, vt2, ln1, ln2;
+IplImage *img, *roi, *frame, *framework, *frameworka, *roip, *roiwork,
+*roiworka, *ventana, *ventanaa, *ErrorVecinosImg, *ErrorVecinosBigImg,
+*trayectoria, *direccion;
 ……………………………………………………………………...
 CvMat* caracHOG(IplImage* img, int ca, int cb){ // Function that returns HOG descriptors
 IplImage* SecondIm = cvCreateImage(cvSize(128,64),img->depth,img- >nChannels); 
