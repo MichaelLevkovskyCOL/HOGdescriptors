@@ -1,4 +1,5 @@
 …………..Fragment of the code………………………………..
+// This is just a fragment I did, requires more to be compiled
 //Functions to calculate HOG descriptors to track and draw a person trajectory
 //Michael Levkovsky Mateus
 //2012
