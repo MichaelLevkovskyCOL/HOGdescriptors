@@ -14,19 +14,19 @@
  
 //**FUNCTIONS-ALGORITH FRAGMENT**//
 //____________________________________________________________________
-CvMat* caracHOG(IplImage* img, int ca, int cb);
-   IplImage** calculateIntegralHOG(IplImage* in);
-    CvMat* calculateHOG_window(IplImage** integrals,CvSize bloque, floatoverlap,int normalization);
-      void calculateHOG_block(CvRect block, int num_bloque,CvMat*hog_block,IplImage** integrals, int normalization);
-      IplImage** integrals;
-        float mask[3]={1.0,0.0,-1.0};
-         int total_caracteristicas, width, height, ca, cb,  aux;
-          float b=0, minaux=0;
-            double *min_val, *max_val;
-             IplImage *img;
+CvMat* caracHOG(IplImage* img, int ca, int cb); 
+IplImage** calculateIntegralHOG(IplImage* in);
+CvMat* calculateHOG_window(IplImage** integrals,CvSize bloque, floatoverlap,int normalization);
+void calculateHOG_block(CvRect block, int num_bloque,CvMat*hog_block,IplImage** integrals, int normalization);
+IplImage** integrals;
+float mask[3]={1.0,0.0,-1.0};
+int total_caracteristicas, width, height, ca, cb,  aux;
+float b=0, minaux=0;
+double *min_val, *max_val;
+IplImage *img;
 
 //____________________________________________________________________
-CvMat* caracHOG(IplImage* img, int ca, int cb){ // Function that returns HOG descriptors
+CvMat* caracHOG(IplImage* img, int ca, int cb){  //Function that returns HOG descriptors
  IplImage* SecondIm = cvCreateImage(cvSize(128,64),img->depth,img- >nChannels); 
   cvResize(img,SecondIm,CV_INTER_LINEAR);
    integrals = (IplImage**) malloc(9 * sizeof(IplImage*)); 
@@ -58,22 +58,22 @@ cvFilter2D(img_gray,yedge,maskV);
 
 
 cvReleaseImage(&img_gray); IplImage** bins = (IplImage**) malloc(9 * sizeof(IplImage*));
-for (int i = 0; i < 9 ; i++) {bins[i] = cvCreateImage(cvGetSize(in), IPL_DEPTH_32F,1); cvSetZero(bins[i]);}
-int x, y;
-float Gradiente_Temporal, Magnitud_Temporal;
-for (y = 0; y height; y++) { float* ptr1 = (float*) (xedge->imageData + y * (xedge->widthStep)); float* ptr2 = (float*) (yedge->imageData + y * (yedge->widthStep)); float** ptrs = (float**) malloc(9 * sizeof(float*));
-for (int i = 0; i < 9 ;i++){ptrs[i] = (float*) (bins[i]->imageData + y * (bins[i]->widthStep));}
-for (x = 0; x width; x++) { if (ptr1[x] == 0){Gradiente_Temporal = ((atan(ptr2[x] / (ptr1[x] + 0.00001))) * (180/ CV_PI)) + 90;}
-else{Gradiente_Temporal = ((atan(ptr2[x] / ptr1[x])) * (180 / CV_PI)) + 90;} Magnitud_Temporal = sqrt((ptr1[x] * ptr1[x]) + (ptr2[x] * ptr2[x]));
-if (Gradiente_Temporal <= 20) {ptrs[0][x] = Magnitud_Temporal;}
-else if (Gradiente_Temporal <= 40) {ptrs[1][x] = Magnitud_Temporal;}
-else if (Gradiente_Temporal <= 60) {ptrs[2][x] = Magnitud_Temporal;}
-else if (Gradiente_Temporal <= 80) {ptrs[3][x] = Magnitud_Temporal;}
-else if (Gradiente_Temporal <= 100) {ptrs[4][x] = Magnitud_Temporal;}
-else if (Gradiente_Temporal <= 120) {ptrs[5][x] = Magnitud_Temporal;}
-else if (Gradiente_Temporal <= 140) {ptrs[6][x] = Magnitud_Temporal;}
-else if (Gradiente_Temporal <= 160) {ptrs[7][x] = Magnitud_Temporal;} else {ptrs[8][x] = Magnitud_Temporal;} } } for (int i = 0; i <9 ; i++){cvIntegral(bins[i], integrals[i]);}
-for (int i = 0; i <9 ; i++){cvReleaseImage(&bins[i]);}
+ for (int i = 0; i < 9 ; i++) {bins[i] = cvCreateImage(cvGetSize(in), IPL_DEPTH_32F,1); cvSetZero(bins[i]);}
+ int x, y;
+  float Gradiente_Temporal, Magnitud_Temporal;
+   for (y = 0; y height; y++) { float* ptr1 = (float*) (xedge->imageData + y * (xedge->widthStep)); float* ptr2 = (float*) (yedge->imageData + y * (yedge->widthStep)); float** ptrs = (float**) malloc(9 * sizeof(float*));
+     for (int i = 0; i < 9 ;i++){ptrs[i] = (float*) (bins[i]->imageData + y * (bins[i]->widthStep));}
+       for (x = 0; x width; x++) { if (ptr1[x] == 0){Gradiente_Temporal = ((atan(ptr2[x] / (ptr1[x] + 0.00001))) * (180/ CV_PI)) + 90;}
+         else{Gradiente_Temporal = ((atan(ptr2[x] / ptr1[x])) * (180 / CV_PI)) + 90;} Magnitud_Temporal = sqrt((ptr1[x] * ptr1[x]) + (ptr2[x] * ptr2[x]));
+          if (Gradiente_Temporal <= 20) {ptrs[0][x] = Magnitud_Temporal;}
+          else if (Gradiente_Temporal <= 40) {ptrs[1][x] = Magnitud_Temporal;}
+          else if (Gradiente_Temporal <= 60) {ptrs[2][x] = Magnitud_Temporal;}
+          else if (Gradiente_Temporal <= 80) {ptrs[3][x] = Magnitud_Temporal;}
+          else if (Gradiente_Temporal <= 100) {ptrs[4][x] = Magnitud_Temporal;}
+          else if (Gradiente_Temporal <= 120) {ptrs[5][x] = Magnitud_Temporal;}
+          else if (Gradiente_Temporal <= 140) {ptrs[6][x] = Magnitud_Temporal;}
+          else if (Gradiente_Temporal <= 160) {ptrs[7][x] = Magnitud_Temporal;} else {ptrs[8][x] = Magnitud_Temporal;} } } for (int i = 0; i <9 ; i++){cvIntegral(bins[i], integrals[i]);}
+               for (int i = 0; i <9 ; i++){cvReleaseImage(&bins[i]);}
 cvReleaseImage(&xedge); 
 cvReleaseImage(&yedge); 
 cvReleaseMat(&maskV); 
@@ -104,6 +104,6 @@ void calculateHOG_block(CvRect block, int num_bloque,CvMat* hog_block,IplImage**
    double b = cvGetReal2D(integrals[i],block.y + block.height, block.x + block.width); 
    double c = cvGetReal2D(integrals[i],block.y + block.height, block.x); 
    double d = cvGetReal2D(integrals[i],block.y, block.x + block.width); 
-cvSetReal2D(aux,0,i,((a + b)-(c + d)));} 
+   cvSetReal2D(aux,0,i,((a + b)-(c + d)));} 
 if (normalization != -1){cvNormalize(aux, aux, 1, 0, normalization);} 
 for (int j=0; j < 9; j++) {cvSetReal2D(hog_block,0,num_bloque*9+j,cvGetReal2D(aux,0,j));}}
